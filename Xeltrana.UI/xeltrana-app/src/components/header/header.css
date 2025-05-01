@@ -1,0 +1,45 @@
+.header {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 15px;
+  background-color: var(--primary-color);
+
+  .logo {
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 35px;
+      height: 35px;
+    }
+  }
+
+  a {
+    color: black;
+    font-size: 20px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .icons {
+    display: flex;
+
+    i {
+      font-size: 20px;
+    }
+
+    .settings {
+      padding-left: 20px;
+    }
+
+    i:hover {
+      cursor: pointer;
+    }
+  }
+}
