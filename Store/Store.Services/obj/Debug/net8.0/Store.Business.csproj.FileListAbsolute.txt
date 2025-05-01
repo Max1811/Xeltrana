@@ -1,0 +1,15 @@
+C:\Learning\FullStack\Store\Store.Services\bin\Debug\net8.0\Store.Business.deps.json
+C:\Learning\FullStack\Store\Store.Services\bin\Debug\net8.0\Store.Business.dll
+C:\Learning\FullStack\Store\Store.Services\bin\Debug\net8.0\Store.Business.pdb
+C:\Learning\FullStack\Store\Store.Services\bin\Debug\net8.0\Store.DataAccess.dll
+C:\Learning\FullStack\Store\Store.Services\bin\Debug\net8.0\Store.DataAccess.pdb
+C:\Learning\FullStack\Store\Store.Services\obj\Debug\net8.0\Store.Business.csproj.AssemblyReference.cache
+C:\Learning\FullStack\Store\Store.Services\obj\Debug\net8.0\Store.Business.GeneratedMSBuildEditorConfig.editorconfig
+C:\Learning\FullStack\Store\Store.Services\obj\Debug\net8.0\Store.Business.AssemblyInfoInputs.cache
+C:\Learning\FullStack\Store\Store.Services\obj\Debug\net8.0\Store.Business.AssemblyInfo.cs
+C:\Learning\FullStack\Store\Store.Services\obj\Debug\net8.0\Store.Business.csproj.CoreCompileInputs.cache
+C:\Learning\FullStack\Store\Store.Services\obj\Debug\net8.0\Store.Bu.DE077B69.Up2Date
+C:\Learning\FullStack\Store\Store.Services\obj\Debug\net8.0\Store.Business.dll
+C:\Learning\FullStack\Store\Store.Services\obj\Debug\net8.0\refint\Store.Business.dll
+C:\Learning\FullStack\Store\Store.Services\obj\Debug\net8.0\Store.Business.pdb
+C:\Learning\FullStack\Store\Store.Services\obj\Debug\net8.0\ref\Store.Business.dll
