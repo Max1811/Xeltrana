@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Store.Business.Models;
 
 namespace Store.Business.Services.Contracts
 {
@@ -15,5 +11,7 @@ namespace Store.Business.Services.Contracts
         Task<IEnumerable<Product>> GetProductsForMen();
 
         Task<IEnumerable<Product>> GetProductsForWomen();
+
+        Task<IEnumerable<ProductDataDto>> GetProductsAsync();
     }
 }

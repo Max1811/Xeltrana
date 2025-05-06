@@ -57,6 +57,7 @@ builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ImageUrlResolver>();
 builder.Services.AddScoped<IS3Service, S3Service>();
 
 builder.Services.AddCors(options =>

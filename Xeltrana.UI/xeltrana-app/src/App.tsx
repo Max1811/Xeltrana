@@ -8,7 +8,8 @@ import Register from "./components/auth/register";
 import Layout from "./components/header/layout";
 import Settings from "./components/settings/settings";
 import "./styles/variables.css";
-import CreateProduct from "./components/product/CreateProduct";
+import CreateProduct from "./components/product/createProduct";
+import Products from "./components/product/products/Products";
 
 const App = () => (
   <Provider store={store}>
@@ -20,6 +21,7 @@ const App = () => (
           <Route path="/" element={<ProtectedRoute />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="products/create-product" element={<CreateProduct />} />
+            <Route path="products" element={<Products />} />
             <Route path="settings" element={<Settings />} />
             {/* other protected routes */}
           </Route>

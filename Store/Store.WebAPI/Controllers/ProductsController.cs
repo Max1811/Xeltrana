@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Store.Business.Models;
 using Store.Business.Services.Contracts;
 using Store.WebAPI.Models;
 
@@ -18,10 +19,10 @@ namespace Store.WebAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("/products")]
-        public async Task<IEnumerable<Product>> GetProductsByCategory([FromQuery] int categoryId)
+        [HttpGet]
+        public async Task<IEnumerable<ProductDataDto>> GetProducts()
         {
-            return await _productService.GetProductsByCategoryAsync(categoryId);
+            return await _productService.GetProductsAsync();
         }
 
         [HttpPost("product")]

@@ -7,7 +7,7 @@ const ProductForm: React.FC = () => {
   const [tempRef] = useState(() => crypto.randomUUID());
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState<number>(0);
+  const [price, setPrice] = useState<string>("");
   const [category, setCategory] = useState<number>(1);
   const [isForMen, setIsForMen] = useState(false);
   const [isForWomen, setIsForWomen] = useState(false);
@@ -66,7 +66,7 @@ const ProductForm: React.FC = () => {
     await api.post("/products/product", {
       name,
       description,
-      price,
+      price: Number(price),
       categoryId: category,
       isForMen,
       isForWomen,
@@ -96,10 +96,9 @@ const ProductForm: React.FC = () => {
 
       <input
         className="form-input"
-        type="text"
         placeholder="Price"
         value={price}
-        onChange={(e) => setPrice(Number(e.target.value))}
+        onChange={(e) => setPrice(e.target.value)}
       />
 
       <select
@@ -134,7 +133,23 @@ const ProductForm: React.FC = () => {
         </label>
       </div>
 
-      <input type="file" multiple onChange={handleFileChange} />
+      <div className="file-upload-wrapper">
+        <label htmlFor="fileUpload" className="custom-file-upload">
+          Choose Images
+        </label>
+        <input
+          id="fileUpload"
+          type="file"
+          multiple
+          onChange={handleFileChange}
+          style={{ display: "none" }}
+        />
+        <span className="files-selected-number">
+          {files.length > 0
+            ? `${files.length} file(s) selected`
+            : "No files selected"}
+        </span>
+      </div>
 
       <div className="preview-grid">
         {previewUrls.map((url, index) => (

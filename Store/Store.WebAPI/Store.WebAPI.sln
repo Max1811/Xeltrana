@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.WebAPI", "Store.WebAPI.csproj", "{40EF4584-981A-4F37-ADDF-5B43E37A4CDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.WebAPI", "Store.WebAPI.csproj", "{40EF4584-981A-4F37-ADDF-5B43E37A4CDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.DataAccess", "..\Store.DataAccess\Store.DataAccess.csproj", "{8252688F-8572-4F48-B319-B6CA195BBB5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.DataAccess", "..\Store.DataAccess\Store.DataAccess.csproj", "{8252688F-8572-4F48-B319-B6CA195BBB5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.Business", "..\Store.Services\Store.Business.csproj", "{DB4F4249-27DF-447B-87E0-B02CA27A36F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.Business", "..\Store.Services\Store.Business.csproj", "{DB4F4249-27DF-447B-87E0-B02CA27A36F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
