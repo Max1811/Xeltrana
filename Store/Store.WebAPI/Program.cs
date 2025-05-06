@@ -1,16 +1,24 @@
+using Amazon.Runtime;
+using Amazon.S3;
+using Amazon;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyAuthApi.Data;
 using Store.Business.Services;
 using Store.Business.Services.Contracts;
+using Store.WebAPI.Mapper;
 using System.Text;
+using Amazon.Extensions.NETCore.Setup;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddAutoMapper(new[] { typeof(MappingProfile).Assembly });
 
 // Add Controllers
 builder.Services.AddControllers();
@@ -35,8 +43,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddDefaultAWSOptions(new AWSOptions
+{
+    Region = RegionEndpoint.GetBySystemName(builder.Configuration["AWS:Region"]),
+    Credentials = new BasicAWSCredentials(
+        builder.Configuration["AWS:AccessKey"],
+        builder.Configuration["AWS:SecretKey"]
+    )
+});
+
+builder.Services.AddAWSService<IAmazonS3>();
+
 builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IS3Service, S3Service>();
 
 builder.Services.AddCors(options =>
 {

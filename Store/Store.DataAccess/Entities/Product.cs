@@ -17,6 +17,12 @@ public class Product
     public int CategoryId { get; set; }
     public Category Category { get; set; }
 
+    [Required]
+    public bool IsForMen { get; set; }
+
+    [Required]
+    public bool IsForWomen { get; set; }
+
     public ICollection<OrderItem> OrderItems { get; set; }
     public ICollection<ProductImage> ProductImages { get; set; }
 }
