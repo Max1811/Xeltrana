@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyAuthApi.Data;
 using Store.Business.Services.Contracts;
+using Store.DataAccess;
 
 namespace Store.Business.Services
 {

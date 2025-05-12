@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Store.DataAccess.Entities;
 
-namespace MyAuthApi.Data;
+namespace Store.DataAccess;
 
 public class AppDbContext : DbContext
 {
@@ -17,4 +18,15 @@ public class AppDbContext : DbContext
     public DbSet<Shipment> Shipments { get; set; }
     public DbSet<Review> Reviews { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
+    public DbSet<Audience> Audience { get; set; }
+    public DbSet<Favourite> Favourites { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Audience>().HasData(
+            new Audience { Id = 1, Name = "Male" },
+            new Audience { Id = 2, Name = "Female" },
+            new Audience { Id = 3, Name = "Unisex" }
+        );
+    }
 }

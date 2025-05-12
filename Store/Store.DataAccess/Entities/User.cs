@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Store.DataAccess.Entities;
+using System.ComponentModel.DataAnnotations;
 
 public class User
 {
@@ -15,4 +16,5 @@ public class User
     public string Email { get; set; }
 
     public ICollection<Order> Orders { get; set; }
+    public ICollection<Favourite> Favourites { get; set; }
 }

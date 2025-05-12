@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MyAuthApi.Data;
+using Store.DataAccess;
 
 #nullable disable
 
@@ -141,18 +141,15 @@ namespace Store.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AudienceId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsForMen")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsForWomen")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -163,6 +160,9 @@ namespace Store.DataAccess.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AudienceId")
+                        .IsUnique();
 
                     b.HasIndex("CategoryId");
 
@@ -243,6 +243,63 @@ namespace Store.DataAccess.Migrations
                     b.HasKey("OrderId");
 
                     b.ToTable("Shipments");
+                });
+
+            modelBuilder.Entity("Store.DataAccess.Entities.Audience", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Audience");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Male"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Female"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Unisex"
+                        });
+                });
+
+            modelBuilder.Entity("Store.DataAccess.Entities.Favourite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Favourites");
                 });
 
             modelBuilder.Entity("User", b =>
@@ -334,11 +391,19 @@ namespace Store.DataAccess.Migrations
 
             modelBuilder.Entity("Product", b =>
                 {
+                    b.HasOne("Store.DataAccess.Entities.Audience", "Audience")
+                        .WithOne("Product")
+                        .HasForeignKey("Product", "AudienceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Audience");
 
                     b.Navigation("Category");
                 });
@@ -384,6 +449,25 @@ namespace Store.DataAccess.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("Store.DataAccess.Entities.Favourite", b =>
+                {
+                    b.HasOne("Product", "Product")
+                        .WithMany("Favourites")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("User", "User")
+                        .WithMany("Favourites")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Category", b =>
                 {
                     b.Navigation("Products");
@@ -402,13 +486,23 @@ namespace Store.DataAccess.Migrations
 
             modelBuilder.Entity("Product", b =>
                 {
+                    b.Navigation("Favourites");
+
                     b.Navigation("OrderItems");
 
                     b.Navigation("ProductImages");
                 });
 
+            modelBuilder.Entity("Store.DataAccess.Entities.Audience", b =>
+                {
+                    b.Navigation("Product")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("User", b =>
                 {
+                    b.Navigation("Favourites");
+
                     b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618

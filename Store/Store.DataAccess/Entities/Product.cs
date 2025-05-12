@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Store.DataAccess.Entities;
 
 public class Product
 {
@@ -17,12 +18,11 @@ public class Product
     public int CategoryId { get; set; }
     public Category Category { get; set; }
 
-    [Required]
-    public bool IsForMen { get; set; }
+    public int AudienceId { get; set; }
 
-    [Required]
-    public bool IsForWomen { get; set; }
+    public Audience Audience { get; set; }
 
     public ICollection<OrderItem> OrderItems { get; set; }
     public ICollection<ProductImage> ProductImages { get; set; }
+    public ICollection<Favourite> Favourites { get; set; }
 }

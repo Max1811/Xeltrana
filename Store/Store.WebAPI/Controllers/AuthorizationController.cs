@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MyAuthApi.Data;
 using Store.Business.Services.Contracts;
+using Store.DataAccess;
 using Store.WebAPI.Models;
 
 namespace Store.WebAPI.Controllers

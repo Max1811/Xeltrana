@@ -1,16 +1,15 @@
+using Amazon;
+using Amazon.Extensions.NETCore.Setup;
 using Amazon.Runtime;
 using Amazon.S3;
-using Amazon;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using MyAuthApi.Data;
 using Store.Business.Services;
 using Store.Business.Services.Contracts;
+using Store.DataAccess;
 using Store.WebAPI.Mapper;
 using System.Text;
-using Amazon.Extensions.NETCore.Setup;
 
 var builder = WebApplication.CreateBuilder(args);
 

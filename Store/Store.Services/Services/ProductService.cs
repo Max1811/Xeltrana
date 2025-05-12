@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using MyAuthApi.Data;
 using Store.Business.Models;
 using Store.Business.Services.Contracts;
+using Store.DataAccess;
+using Store.Shared.Enums;
 using System.Linq.Expressions;
 
 namespace Store.Business.Services
@@ -11,7 +12,7 @@ namespace Store.Business.Services
     {
         private readonly AppDbContext _appDbContext;
         private readonly IS3Service _s3Service;
-        private readonly IMapper _mapper; 
+        private readonly IMapper _mapper;
 
         public ProductService(
             AppDbContext appDbContext,
@@ -32,10 +33,6 @@ namespace Store.Business.Services
 
             return products;
         }
-
-        public async Task<IEnumerable<Product>> GetProductsForMen() => await GetProducts(p => p.IsForMen == true);
-
-        public async Task<IEnumerable<Product>> GetProductsForWomen() => await GetProducts(p => p.IsForWomen == true);
 
         public async Task<Product> CreateProduct(Product product, string tempRef)
         {
@@ -60,12 +57,18 @@ namespace Store.Business.Services
             return product;
         }
 
-        public async Task<IEnumerable<ProductDataDto>> GetProductsAsync()
+        public async Task<IEnumerable<ProductDataDto>> GetProductsAsync(AudienceEnum? audience = null)
         {
-            var products = await _appDbContext.Products
-                .Include(p => p.ProductImages)
-                .Include(p => p.Category)
-                .ToListAsync();
+            List<Product> products = new List<Product>();
+
+            if (audience == null)
+            {
+                products = await GetProducts(p => true);
+            }
+            else
+            {
+                products = await GetProducts(p => p.AudienceId == (int)AudienceEnum.Unisex || p.AudienceId == (int)audience.Value);
+            }
 
             var productDtos = _mapper.Map<List<ProductDataDto>>(products);
 
@@ -73,12 +76,18 @@ namespace Store.Business.Services
         }
 
 
-        private async Task<IEnumerable<Product>> GetProducts(Expression<Func<Product, bool>> predicate)
+        private async Task<List<Product>> GetProducts(Expression<Func<Product, bool>> predicate)
         {
             return await _appDbContext.Products
                 .Where(predicate)
                 .Include(p => p.ProductImages)
+                .Include(p => p.Category)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Category>> GetProductCategories()
+        {
+            return await _appDbContext.Categories.ToListAsync();
         }
     }
 }

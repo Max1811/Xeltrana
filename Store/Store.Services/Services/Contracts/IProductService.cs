@@ -1,4 +1,5 @@
 ﻿using Store.Business.Models;
+using Store.Shared.Enums;
 
 namespace Store.Business.Services.Contracts
 {
@@ -8,10 +9,7 @@ namespace Store.Business.Services.Contracts
 
         Task<Product> CreateProduct(Product product, string tempRef);
 
-        Task<IEnumerable<Product>> GetProductsForMen();
-
-        Task<IEnumerable<Product>> GetProductsForWomen();
-
-        Task<IEnumerable<ProductDataDto>> GetProductsAsync();
+        Task<IEnumerable<ProductDataDto>> GetProductsAsync(AudienceEnum? audience = null);
+        Task<IEnumerable<Category>> GetProductCategories();
     }
 }

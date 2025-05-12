@@ -12,9 +12,7 @@
 
         public int CategoryId { get; set; }
 
-        public bool IsForMen { get; set; }
-
-        public bool IsForWomen { get; set; }
+        public int AudienceId { get; set; }
 
         public IEnumerable<string> Images { get; set; }
     }

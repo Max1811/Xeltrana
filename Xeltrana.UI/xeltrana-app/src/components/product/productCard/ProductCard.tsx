@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import "./productCard.css";
+import { Audience } from "../models/products.model";
 
 interface ProductCardProps {
   id: string;
   name: string;
   description: string;
   price: number;
-  isForMen: boolean;
-  isForWomen: boolean;
+  audienceId: number;
   images: string[];
 }
 
@@ -16,8 +16,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   name,
   description,
   price,
-  isForMen,
-  isForWomen,
+  audienceId,
   images,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -29,6 +28,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const goToNext = () => {
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
+
+  console.log(audienceId);
 
   return (
     <div className="product-card">
@@ -64,8 +65,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <div className="product-price">${price.toFixed(2)}</div>
 
         <div className="product-tags">
-          {isForMen && <span className="tag-men">For Men</span>}
-          {isForWomen && <span className="tag-women">For Women</span>}
+          {(audienceId === Audience.Men || audienceId === Audience.Unisex) && (
+            <span className="tag-men">For Men</span>
+          )}
+          {(audienceId === Audience.Women ||
+            audienceId === Audience.Unisex) && (
+            <span className="tag-women">For Women</span>
+          )}
         </div>
       </div>
     </div>

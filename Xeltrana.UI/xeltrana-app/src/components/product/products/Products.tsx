@@ -2,18 +2,21 @@ import React, { useState, useEffect } from "react";
 import ProductCard from "../productCard/ProductCard";
 import "./products.css";
 import api from "../../../services/api";
+import { useSearchParams } from "react-router-dom";
 
 interface Product {
   id: string;
   name: string;
   description: string;
   price: number;
-  isForMen: boolean;
-  isForWomen: boolean;
+  audienceId: number;
   images: string[];
 }
 
 const Products: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const audience = searchParams.get("audience");
+
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +24,13 @@ const Products: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await api.get<Product[]>("/products");
+        let url = "/products";
+
+        if (audience) {
+          url = url.concat(`?audience=${audience}`);
+        }
+
+        const response = await api.get<Product[]>(url);
         setProducts(response.data);
       } catch (err) {
         setError("Failed to fetch products.");
@@ -31,7 +40,7 @@ const Products: React.FC = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [audience]);
 
   if (loading) {
     return <div className="loading">Loading...</div>;
@@ -51,8 +60,7 @@ const Products: React.FC = () => {
             name={product.name}
             description={product.description}
             price={product.price}
-            isForMen={product.isForMen}
-            isForWomen={product.isForWomen}
+            audienceId={product.audienceId}
             images={product.images}
           />
         ))

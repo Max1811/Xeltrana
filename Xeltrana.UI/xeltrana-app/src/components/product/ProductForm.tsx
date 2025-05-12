@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import api from "../../services/api";
 import "./productForm.css";
+import { Audience } from "./models/products.model";
 
 const ProductForm: React.FC = () => {
   const [tempRef] = useState(() => crypto.randomUUID());
@@ -13,9 +14,20 @@ const ProductForm: React.FC = () => {
   const [isForWomen, setIsForWomen] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
-  const categoryOptions = [1, 2, 3, 4];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoriesResult = await api.get("/products/categories");
+        setCategories(categoriesResult.data as []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
+    fetchCategories();
+  }, []);
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
 
@@ -68,8 +80,12 @@ const ProductForm: React.FC = () => {
       description,
       price: Number(price),
       categoryId: category,
-      isForMen,
-      isForWomen,
+      audienceId:
+        isForMen && isForWomen
+          ? Audience.Unisex
+          : isForMen
+          ? Audience.Men
+          : Audience.Women,
       tempRef,
     });
 
@@ -106,9 +122,9 @@ const ProductForm: React.FC = () => {
         value={category}
         onChange={(e) => setCategory(Number(e.target.value))}
       >
-        {categoryOptions.map((cat) => (
-          <option key={cat} value={cat}>
-            Category {cat}
+        {categories.map((cat) => (
+          <option key={cat.id} value={cat.name}>
+            {cat.name}
           </option>
         ))}
       </select>
