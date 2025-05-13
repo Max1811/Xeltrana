@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
-import { login } from "../../redux/slices/authSlice";
+import { login, User } from "../../redux/slices/authSlice";
 import styles from "./login.module.css";
 import { useDispatch } from "react-redux";
 
@@ -30,7 +30,7 @@ const Login: React.FC = () => {
     }
 
     try {
-      const response = await api.post<{ token: string }>(
+      const response = await api.post<{ token: string; user: any }>(
         "/authorization/login",
         {
           username,
@@ -41,7 +41,7 @@ const Login: React.FC = () => {
       dispatch(
         login({
           token: response.data.token,
-          user: {},
+          user: response.data.user as User,
         })
       );
 

@@ -1,13 +1,22 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Store.Business.Models;
-using Store.Business.Services.Contracts;
 using Store.DataAccess;
 using Store.Shared.Enums;
 using System.Linq.Expressions;
 
 namespace Store.Business.Services
 {
+    public interface IProductService
+    {
+        Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId);
+
+        Task<Product> CreateProduct(Product product, string tempRef);
+
+        Task<IEnumerable<ProductDataDto>> GetProductsAsync(AudienceEnum? audience = null);
+        Task<IEnumerable<Category>> GetProductCategories();
+    }
+
     public class ProductService : IProductService
     {
         private readonly AppDbContext _appDbContext;

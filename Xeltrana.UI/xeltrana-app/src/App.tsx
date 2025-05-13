@@ -10,24 +10,32 @@ import Settings from "./components/settings/settings";
 import "./styles/variables.css";
 import CreateProduct from "./components/product/createProduct";
 import Products from "./components/product/products/Products";
+import { StoreProvider } from "./context/storeContext";
+import Favorites from "./components/favorites/favourites";
 
 const App = () => (
   <Provider store={store}>
-    <Router>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/" element={<ProtectedRoute />}>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="products/create-product" element={<CreateProduct />} />
-            <Route path="products" element={<Products />} />
-            <Route path="settings" element={<Settings />} />
-            {/* other protected routes */}
+    <StoreProvider>
+      <Router>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/" element={<ProtectedRoute />}>
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route
+                path="products/create-product"
+                element={<CreateProduct />}
+              />
+              <Route path="products" element={<Products />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="favorites" element={<Favorites />} />
+              {/* other protected routes */}
+            </Route>
           </Route>
-        </Route>
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </StoreProvider>
   </Provider>
 );
 

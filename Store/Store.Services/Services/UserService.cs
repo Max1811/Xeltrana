@@ -1,9 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Store.Business.Services.Contracts;
 using Store.DataAccess;
 
 namespace Store.Business.Services
 {
+    public interface IUserService
+    {
+        Task<bool> IsUserExists(string username);
+    }
+
     public class UserService : IUserService
     {
         private readonly AppDbContext _dbContext;

@@ -74,7 +74,7 @@ const ProductForm: React.FC = () => {
     for (const file of files) {
       await handleFileUpload(file);
     }
-
+    console.log(category);
     await api.post("/products/product", {
       name,
       description,
@@ -123,7 +123,7 @@ const ProductForm: React.FC = () => {
         onChange={(e) => setCategory(Number(e.target.value))}
       >
         {categories.map((cat) => (
-          <option key={cat.id} value={cat.name}>
+          <option key={cat.id} value={cat.id}>
             {cat.name}
           </option>
         ))}

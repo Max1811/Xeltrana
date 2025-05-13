@@ -1,12 +1,16 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Store.Business.Services.Contracts;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 namespace Store.Business.Services
 {
+    public interface IAuthorizationService
+    {
+        public string GenerateJwtToken(User user);
+    }
+
     public class AuthorizationService : IAuthorizationService
     {
         private readonly IConfiguration _config;

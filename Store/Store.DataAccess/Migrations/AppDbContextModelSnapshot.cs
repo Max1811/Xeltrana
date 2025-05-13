@@ -279,7 +279,7 @@ namespace Store.DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Store.DataAccess.Entities.Favourite", b =>
+            modelBuilder.Entity("Store.DataAccess.Entities.Favorite", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -299,7 +299,7 @@ namespace Store.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Favourites");
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("User", b =>
@@ -449,7 +449,7 @@ namespace Store.DataAccess.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("Store.DataAccess.Entities.Favourite", b =>
+            modelBuilder.Entity("Store.DataAccess.Entities.Favorite", b =>
                 {
                     b.HasOne("Product", "Product")
                         .WithMany("Favourites")

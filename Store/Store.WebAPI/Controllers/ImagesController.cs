@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.WebAPI.Models;
 
 namespace Store.WebAPI.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class ImagesController : Controller
     {

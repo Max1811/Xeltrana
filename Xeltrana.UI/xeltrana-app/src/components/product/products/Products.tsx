@@ -5,7 +5,7 @@ import api from "../../../services/api";
 import { useSearchParams } from "react-router-dom";
 
 interface Product {
-  id: string;
+  id: number;
   name: string;
   description: string;
   price: number;

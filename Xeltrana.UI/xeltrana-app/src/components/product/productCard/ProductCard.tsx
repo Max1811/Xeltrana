@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./productCard.css";
 import { Audience } from "../models/products.model";
+import { useStoreContext } from "../../../context/storeContext";
 
 interface ProductCardProps {
-  id: string;
+  id: number;
   name: string;
   description: string;
   price: number;
@@ -20,6 +21,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
   images,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const { favorites } = useStoreContext();
+
+  const [liked, setLiked] = useState(false);
+
+  useEffect(() => {
+    const isFav = favorites.items.some((item) => item.product.id === id);
+    console.log(isFav);
+    setLiked(isFav);
+  }, [favorites.items, id]);
+
+  const toggleLike = async () => {
+    await favorites.switchFavorite(id);
+  };
 
   const goToPrev = () => {
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
@@ -73,6 +88,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
             <span className="tag-women">For Women</span>
           )}
         </div>
+        <i
+          className={`fas fa-heart like-button ${liked ? "liked" : ""}`}
+          onClick={toggleLike}
+        />
       </div>
     </div>
   );

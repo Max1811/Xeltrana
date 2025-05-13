@@ -1,0 +1,55 @@
+.favorites-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.favorites-page h2 {
+  margin-bottom: 20px;
+}
+
+.favorite-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.favorite-line:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.favorite-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-right: 16px;
+}
+
+.favorite-info {
+  flex-grow: 1;
+}
+
+.remove-favorite-button {
+  background: transparent;
+  border: none;
+  color: #e63946;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+  margin-left: 16px;
+  align-self: flex-start;
+}
+
+.remove-button:hover {
+  transform: scale(1.1);
+}

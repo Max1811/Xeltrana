@@ -24,5 +24,5 @@ public class Product
 
     public ICollection<OrderItem> OrderItems { get; set; }
     public ICollection<ProductImage> ProductImages { get; set; }
-    public ICollection<Favourite> Favourites { get; set; }
+    public ICollection<Favorite> Favourites { get; set; }
 }

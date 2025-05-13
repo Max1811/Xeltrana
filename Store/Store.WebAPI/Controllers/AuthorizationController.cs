@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Store.Business.Services.Contracts;
+using Store.Business.Services;
 using Store.DataAccess;
 using Store.WebAPI.Models;
 
@@ -59,7 +59,7 @@ namespace Store.WebAPI.Controllers
                 return Unauthorized();
 
             var token = _authorizationService.GenerateJwtToken(user);
-            return Ok(new { token });
+            return Ok(new { token, user });
         }
     }
 }

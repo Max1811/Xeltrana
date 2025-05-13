@@ -6,23 +6,19 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Store.Business.Services;
-using Store.Business.Services.Contracts;
 using Store.DataAccess;
 using Store.WebAPI.Mapper;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAutoMapper(new[] { typeof(MappingProfile).Assembly });
 
-// Add Controllers
 builder.Services.AddControllers();
 
-// Configure JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"] ?? Environment.GetEnvironmentVariable("JWT_KEY");
 if (jwtKey is null)
     throw new Exception("JWT Key is missing!");
@@ -58,6 +54,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ImageUrlResolver>();
 builder.Services.AddScoped<IS3Service, S3Service>();
+builder.Services.AddScoped<IFavouritesService, FavouritesService>();
 
 builder.Services.AddCors(options =>
 {

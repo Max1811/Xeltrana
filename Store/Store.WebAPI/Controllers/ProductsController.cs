@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.Business.Models;
-using Store.Business.Services.Contracts;
+using Store.Business.Services;
 using Store.Shared.Enums;
 using Store.WebAPI.Models;
 

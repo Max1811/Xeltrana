@@ -52,7 +52,7 @@
   align-items: center;
   padding: 30px;
 
-  nav {
+  .nav {
     padding: 0px 40px;
     transition: all 0.3s ease;
     border: 1px solid white;
@@ -71,4 +71,29 @@
       transition: all 0.2s ease;
     }
   }
+}
+
+.heart-container {
+  position: relative;
+  display: inline-block;
+  margin-left: 3rem;
+}
+
+.custom-heart {
+  color: white;
+  -webkit-text-stroke: 4px black;
+  font-size: 1.5rem;
+}
+
+.heart-count {
+  position: absolute;
+  top: -0.4rem;
+  right: -0.5rem;
+  background-color: red;
+  color: white;
+  font-size: 0.6rem;
+  padding: 2px 4px;
+  border-radius: 50%;
+  font-weight: bold;
+  line-height: 1;
 }

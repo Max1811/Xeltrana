@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Store.Business.Models;
+using Store.DataAccess.Entities;
 using Store.WebAPI.Models;
 
 namespace Store.WebAPI.Mapper
@@ -17,6 +18,10 @@ namespace Store.WebAPI.Mapper
             CreateMap<Product, ProductDataDto>()
                 .ForMember(dest => dest.Images,
                 opt => opt.MapFrom<ImageUrlResolver>());
-            }
+
+            CreateMap<Favorite, FavoritesDto>();
+
+            CreateMap<AddFavouriteModel, Favorite>();
+        }
     }
 }
