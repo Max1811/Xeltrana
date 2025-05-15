@@ -3,6 +3,12 @@ import axios from "axios";
 import api from "../../services/api";
 import "./productForm.css";
 import { Audience } from "./models/products.model";
+import {
+  Color,
+  ProductSize,
+  ProductVariant,
+  SizeType,
+} from "../../types/types";
 
 const ProductForm: React.FC = () => {
   const [tempRef] = useState(() => crypto.randomUUID());
@@ -15,19 +21,32 @@ const ProductForm: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
+  const [availableColors, setAvailableColors] = useState<Color[]>([]);
+  const [productSizes, setProductSizes] = useState<ProductSize[]>([]);
+
+  const [productVariants, setProductVariants] = useState<ProductVariant[]>([]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchProductData = async () => {
       try {
         const categoriesResult = await api.get("/products/categories");
         setCategories(categoriesResult.data as []);
+
+        const productColors = await api.get<Color[]>("/products/colors");
+        setAvailableColors(productColors.data);
+
+        const productSizesData = await api.get<ProductSize[]>(
+          "/products/sizes"
+        );
+        setProductSizes(productSizesData.data);
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchCategories();
+    fetchProductData();
   }, []);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
 
@@ -46,7 +65,7 @@ const ProductForm: React.FC = () => {
       ...newFiles.map((file) => URL.createObjectURL(file)),
     ]);
 
-    e.target.value = ""; // allow re-selection of the same file
+    e.target.value = "";
   };
 
   const handleRemoveFile = (indexToRemove: number) => {
@@ -70,15 +89,73 @@ const ProductForm: React.FC = () => {
     });
   };
 
+  const handleAddVariant = () => {
+    setProductVariants((prev) => [
+      ...prev,
+      {
+        colorId: availableColors.length > 0 ? availableColors[0].id : 0,
+        productSizes: [{ size: "", quantity: 1, sizeId: SizeType.Alpha }],
+      },
+    ]);
+  };
+
+  const handleRemoveVariant = (index: number) => {
+    setProductVariants((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleVariantChange = (
+    index: number,
+    field: keyof ProductVariant,
+    value: any
+  ) => {
+    const newVariants = [...productVariants];
+    newVariants[index] = { ...newVariants[index], [field]: value };
+    setProductVariants(newVariants);
+  };
+
+  const handleSizeChange = (
+    variantIndex: number,
+    sizeIndex: number,
+    field: keyof ProductSize,
+    value: any
+  ) => {
+    const newVariants = [...productVariants];
+    const updatedSizes = [...newVariants[variantIndex].productSizes];
+    updatedSizes[sizeIndex] = {
+      ...updatedSizes[sizeIndex],
+      [field]: field === "quantity" ? Number(value) : value,
+    };
+    newVariants[variantIndex].productSizes = updatedSizes;
+    setProductVariants(newVariants);
+  };
+
+  const handleAddSize = (variantIndex: number) => {
+    const newVariants = [...productVariants];
+    newVariants[variantIndex].productSizes.push({
+      size: "",
+      quantity: 1,
+      sizeId: SizeType.Alpha,
+    });
+    setProductVariants(newVariants);
+  };
+
+  const handleRemoveSize = (variantIndex: number, sizeIndex: number) => {
+    const newVariants = [...productVariants];
+    newVariants[variantIndex].productSizes = newVariants[
+      variantIndex
+    ].productSizes.filter((_, i) => i !== sizeIndex);
+    setProductVariants(newVariants);
+  };
+
   const handleSubmit = async () => {
     for (const file of files) {
       await handleFileUpload(file);
     }
-    console.log(category);
+
     await api.post("/products/product", {
       name,
       description,
-      price: Number(price),
+      originalPrice: Number(price),
       categoryId: category,
       audienceId:
         isForMen && isForWomen
@@ -87,6 +164,7 @@ const ProductForm: React.FC = () => {
           ? Audience.Men
           : Audience.Women,
       tempRef,
+      productVariants,
     });
 
     alert("Successfully created!");
@@ -181,6 +259,67 @@ const ProductForm: React.FC = () => {
           </div>
         ))}
       </div>
+
+      <h3>Product Variants</h3>
+      <button type="button" onClick={handleAddVariant}>
+        Add Variant
+      </button>
+
+      {productVariants.map((variant, i) => (
+        <div
+          key={i}
+          style={{
+            margin: "10px 0",
+            border: "1px solid #ccc",
+            padding: "10px",
+          }}
+        >
+          <select
+            value={variant.colorId}
+            onChange={(e) =>
+              handleVariantChange(i, "colorId", Number(e.target.value))
+            }
+          >
+            {availableColors.map((color) => (
+              <option key={color.id} value={color.id}>
+                {color.name}
+              </option>
+            ))}
+          </select>
+
+          <button type="button" onClick={() => handleRemoveVariant(i)}>
+            Remove Variant
+          </button>
+
+          <div>
+            {variant.productSizes.map((size, j) => (
+              <div key={j}>
+                <input
+                  placeholder="Size"
+                  value={size.size}
+                  onChange={(e) =>
+                    handleSizeChange(i, j, "size", e.target.value)
+                  }
+                />
+                <input
+                  type="number"
+                  placeholder="Quantity"
+                  value={size.quantity}
+                  onChange={(e) =>
+                    handleSizeChange(i, j, "quantity", e.target.value)
+                  }
+                />
+                <button onClick={() => handleRemoveSize(i, j)}>
+                  Remove Size
+                </button>
+              </div>
+            ))}
+            <button type="button" onClick={() => handleAddSize(i)}>
+              Add Size
+            </button>
+          </div>
+        </div>
+      ))}
 
       <button className="form-button" onClick={handleSubmit}>
         Create Product

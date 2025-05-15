@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
-import { login, User } from "../../redux/slices/authSlice";
+import { login } from "../../redux/slices/authSlice";
 import styles from "./login.module.css";
 import { useDispatch } from "react-redux";
+import { User } from "../../types/types";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();

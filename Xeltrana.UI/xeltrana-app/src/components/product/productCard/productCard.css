@@ -153,3 +153,7 @@
   color: rgb(225, 101, 101);
   -webkit-text-stroke: 0; /* Remove stroke when filled */
 }
+
+.product-card-clickable {
+  cursor: pointer;
+}

@@ -3,15 +3,7 @@ import ProductCard from "../productCard/ProductCard";
 import "./products.css";
 import api from "../../../services/api";
 import { useSearchParams } from "react-router-dom";
-
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  audienceId: number;
-  images: string[];
-}
+import { Product } from "../../../types/types";
 
 const Products: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -54,15 +46,7 @@ const Products: React.FC = () => {
     <div className="products-container">
       {products.length > 0 ? (
         products.map((product) => (
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            description={product.description}
-            price={product.price}
-            audienceId={product.audienceId}
-            images={product.images}
-          />
+          <ProductCard key={product.id} product={product} />
         ))
       ) : (
         <div>No products available</div>

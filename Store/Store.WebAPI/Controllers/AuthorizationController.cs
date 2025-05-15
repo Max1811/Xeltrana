@@ -48,7 +48,10 @@ namespace Store.WebAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserDto userDto)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == userDto.UserName);
+            var user = await _dbContext.Users
+                .Include(u => u.UserRole)
+                .FirstOrDefaultAsync(u => u.Username == userDto.UserName);
+
             if (user is null)
                 return Unauthorized();
 

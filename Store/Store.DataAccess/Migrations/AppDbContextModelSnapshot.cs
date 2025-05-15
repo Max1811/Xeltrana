@@ -156,8 +156,17 @@ namespace Store.DataAccess.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<decimal>("Price")
+                    b.Property<decimal>("OriginalPrice")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("SaleEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("SalePrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("SaleStartDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -302,6 +311,434 @@ namespace Store.DataAccess.Migrations
                     b.ToTable("Favorites");
                 });
 
+            modelBuilder.Entity("Store.DataAccess.Entities.ProductColor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("HexCode")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductColors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            HexCode = "#000000",
+                            Name = "Black"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            HexCode = "#FFFFFF",
+                            Name = "White"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            HexCode = "#FF0000",
+                            Name = "Red"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            HexCode = "#0000FF",
+                            Name = "Blue"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            HexCode = "#008000",
+                            Name = "Green"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            HexCode = "#FFFF00",
+                            Name = "Yellow"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            HexCode = "#FFA500",
+                            Name = "Orange"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            HexCode = "#800080",
+                            Name = "Purple"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            HexCode = "#808080",
+                            Name = "Gray"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            HexCode = "#FFC0CB",
+                            Name = "Pink"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            HexCode = "#A52A2A",
+                            Name = "Brown"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            HexCode = "#F5F5DC",
+                            Name = "Beige"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            HexCode = "#00FFFF",
+                            Name = "Cyan"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            HexCode = "#FF00FF",
+                            Name = "Magenta"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            HexCode = "#000080",
+                            Name = "Navy"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            HexCode = "#808000",
+                            Name = "Olive"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            HexCode = "#008080",
+                            Name = "Teal"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            HexCode = "#800000",
+                            Name = "Maroon"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            HexCode = "#00FF00",
+                            Name = "Lime"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            HexCode = "#C0C0C0",
+                            Name = "Silver"
+                        });
+                });
+
+            modelBuilder.Entity("Store.DataAccess.Entities.ProductSize", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductSizes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "XS",
+                            Type = "Apparel"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "S",
+                            Type = "Apparel"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "M",
+                            Type = "Apparel"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "L",
+                            Type = "Apparel"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "XL",
+                            Type = "Apparel"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "XXL",
+                            Type = "Apparel"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "28",
+                            Type = "Accessories"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "30",
+                            Type = "Accessories"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "32",
+                            Type = "Accessories"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "34",
+                            Type = "Accessories"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "36",
+                            Type = "Accessories"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "38",
+                            Type = "Accessories"
+                        },
+                        new
+                        {
+                            Id = 100,
+                            Name = "28",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 101,
+                            Name = "29",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 102,
+                            Name = "30",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 103,
+                            Name = "31",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 104,
+                            Name = "32",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 105,
+                            Name = "33",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 106,
+                            Name = "34",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 107,
+                            Name = "35",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 108,
+                            Name = "36",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 109,
+                            Name = "37",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 110,
+                            Name = "38",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 111,
+                            Name = "39",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 112,
+                            Name = "40",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 113,
+                            Name = "41",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 114,
+                            Name = "42",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 115,
+                            Name = "43",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 116,
+                            Name = "44",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 117,
+                            Name = "45",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 118,
+                            Name = "46",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 119,
+                            Name = "47",
+                            Type = "Shoes"
+                        },
+                        new
+                        {
+                            Id = 120,
+                            Name = "48",
+                            Type = "Shoes"
+                        });
+                });
+
+            modelBuilder.Entity("Store.DataAccess.Entities.ProductVariant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ColorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SizeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ColorId");
+
+                    b.HasIndex("SizeId");
+
+                    b.HasIndex("ProductId", "SizeId", "ColorId")
+                        .IsUnique();
+
+                    b.ToTable("ProductVariants");
+                });
+
+            modelBuilder.Entity("Store.DataAccess.Entities.UserRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserRole");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Role = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Role = "Client"
+                        });
+                });
+
             modelBuilder.Entity("User", b =>
                 {
                     b.Property<int>("Id")
@@ -319,12 +756,17 @@ namespace Store.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserRoleId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserRoleId");
 
                     b.ToTable("Users");
                 });
@@ -468,6 +910,44 @@ namespace Store.DataAccess.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Store.DataAccess.Entities.ProductVariant", b =>
+                {
+                    b.HasOne("Store.DataAccess.Entities.ProductColor", "Color")
+                        .WithMany("ProductVariants")
+                        .HasForeignKey("ColorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Product", "Product")
+                        .WithMany("ProductVariants")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Store.DataAccess.Entities.ProductSize", "Size")
+                        .WithMany("ProductVariants")
+                        .HasForeignKey("SizeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Color");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Size");
+                });
+
+            modelBuilder.Entity("User", b =>
+                {
+                    b.HasOne("Store.DataAccess.Entities.UserRole", "UserRole")
+                        .WithMany()
+                        .HasForeignKey("UserRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserRole");
+                });
+
             modelBuilder.Entity("Category", b =>
                 {
                     b.Navigation("Products");
@@ -491,12 +971,24 @@ namespace Store.DataAccess.Migrations
                     b.Navigation("OrderItems");
 
                     b.Navigation("ProductImages");
+
+                    b.Navigation("ProductVariants");
                 });
 
             modelBuilder.Entity("Store.DataAccess.Entities.Audience", b =>
                 {
                     b.Navigation("Product")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Store.DataAccess.Entities.ProductColor", b =>
+                {
+                    b.Navigation("ProductVariants");
+                });
+
+            modelBuilder.Entity("Store.DataAccess.Entities.ProductSize", b =>
+                {
+                    b.Navigation("ProductVariants");
                 });
 
             modelBuilder.Entity("User", b =>

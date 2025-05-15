@@ -6,12 +6,15 @@
 
         public string Description { get; set; }
 
-        public decimal Price { get; set; }
+        public decimal OriginalPrice { get; set; }
+        public decimal? SalePrice { get; set; }
 
         public int CategoryId { get; set; }
 
         public int AudienceId { get; set; }
 
         public string TempRef { get; set; }
+
+        public List<ProductVariantDto> ProductVariants { get; set; }
     }
 }

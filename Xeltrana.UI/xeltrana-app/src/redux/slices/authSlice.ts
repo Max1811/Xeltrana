@@ -1,33 +1,60 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { User } from "../../types/types";
 
-export interface User {
+const STORAGE_KEYS = {
+  token: "token",
+  userId: "userId",
+  userName: "userName",
+  roleId: "roleId",
+};
+
+interface UserState {
   id: number;
   name: string;
+  roleId: number;
 }
 
 interface AuthState {
   isAuthenticated: boolean;
   token: string | null;
-  user: User | null;
+  user: UserState | null;
 }
+const saveAuthToStorage = (token: string, user: User) => {
+  localStorage.setItem(STORAGE_KEYS.token, token);
+  localStorage.setItem(STORAGE_KEYS.userId, user.id.toString());
+  localStorage.setItem(STORAGE_KEYS.userName, user.name);
+  localStorage.setItem(STORAGE_KEYS.roleId, user.userRole.id.toString());
+};
 
-const initialToken = localStorage.getItem("token");
+const clearAuthFromStorage = () => {
+  Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key));
+};
 
-const userIdRaw = localStorage.getItem("userId");
-const userName = localStorage.getItem("userName");
+const getUserFromStorage = (): UserState | null => {
+  const id = localStorage.getItem(STORAGE_KEYS.userId);
+  const name = localStorage.getItem(STORAGE_KEYS.userName);
+  const roleId = localStorage.getItem(STORAGE_KEYS.roleId);
 
-let user: User | null = null;
+  if (!id || !name || !roleId) return null;
 
-if (userIdRaw !== null && userName !== null) {
-  const parsedId = parseInt(userIdRaw, 10);
-  if (!isNaN(parsedId)) {
-    user = { id: parsedId, name: userName };
-  }
-}
+  const parsedId = parseInt(id, 10);
+  const parsedRoleId = parseInt(roleId, 10);
+
+  if (isNaN(parsedId) || isNaN(parsedRoleId)) return null;
+
+  return {
+    id: parsedId,
+    name,
+    roleId: parsedRoleId,
+  };
+};
+
+const token = localStorage.getItem(STORAGE_KEYS.token);
+const user = getUserFromStorage();
 
 const initialState: AuthState = {
-  isAuthenticated: !!initialToken,
-  token: initialToken,
+  isAuthenticated: !!token && !!user,
+  token,
   user,
 };
 
@@ -35,23 +62,22 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    login: (state, action: PayloadAction<{ token: string; user: any }>) => {
+    login: (state, action: PayloadAction<{ token: string; user: User }>) => {
+      const { token, user } = action.payload;
       state.isAuthenticated = true;
-      state.token = action.payload.token;
-      state.user = action.payload.user;
-
-      localStorage.setItem("token", action.payload.token);
-      localStorage.setItem("userId", action.payload.user?.id);
-      localStorage.setItem("userName", action.payload.user?.name);
+      state.token = token;
+      state.user = {
+        id: user.id,
+        name: user.name,
+        roleId: user.userRole.id,
+      };
+      saveAuthToStorage(token, user);
     },
     logout: (state) => {
       state.isAuthenticated = false;
       state.token = null;
-      state.user = {} as User;
-
-      localStorage.removeItem("token");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("userName");
+      state.user = null;
+      clearAuthFromStorage();
     },
   },
 });

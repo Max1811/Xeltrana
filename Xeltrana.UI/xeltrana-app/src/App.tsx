@@ -12,6 +12,7 @@ import CreateProduct from "./components/product/createProduct";
 import Products from "./components/product/products/Products";
 import { StoreProvider } from "./context/storeContext";
 import Favorites from "./components/favorites/favourites";
+import ViewProductPage from "./components/product/viewProduct/viewProduct";
 
 const App = () => (
   <Provider store={store}>
@@ -28,6 +29,7 @@ const App = () => (
                 element={<CreateProduct />}
               />
               <Route path="products" element={<Products />} />
+              <Route path="products/:id" element={<ViewProductPage />} />
               <Route path="settings" element={<Settings />} />
               <Route path="favorites" element={<Favorites />} />
               {/* other protected routes */}

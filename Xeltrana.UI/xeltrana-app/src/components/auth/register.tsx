@@ -4,6 +4,7 @@ import api from "../../services/api";
 import styles from "./login.module.css"; // Shared with Login
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/slices/authSlice";
+import { User } from "../../types/types";
 
 const Register: React.FC = () => {
   const dispatch = useDispatch();
@@ -50,7 +51,7 @@ const Register: React.FC = () => {
       dispatch(
         login({
           token: response.data.token,
-          user: {},
+          user: {} as User,
         })
       );
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.Business.Models;
 using Store.Business.Services;
+using Store.DataAccess.Entities;
 using Store.Shared.Enums;
 using Store.WebAPI.Models;
 
@@ -40,6 +41,34 @@ namespace Store.WebAPI.Controllers
         public async Task<IEnumerable<Category>> GetProductCategoriesAsync()
         {
             return await _productService.GetProductCategories();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ProductDataDto?> GetProduct(int id)
+        {
+            return await _productService.GetProductAsync(id);
+        }
+
+        [HttpGet("category/{categoryId}")]
+        public async Task<IEnumerable<ProductDataDto>> GetProductsByCategory(int categoryId, [FromQuery] AudienceEnum? audience = null)
+        {
+            return await _productService.GetProductsByCategoryAsync(categoryId, audience);
+        }
+
+        [HttpGet("colors")]
+        public async Task<IEnumerable<ProductColorDto>> GetProductColors()
+        {
+            var productColors = await _productService.GetProductColors();
+
+            return _mapper.Map<IEnumerable<ProductColorDto>>(productColors);
+        }
+
+        [HttpGet("sizes")]
+        public async Task<IEnumerable<ProductSizeDto>> GetProductSizes()
+        {
+            var productSizes = await _productService.GetProductSizes();
+
+            return _mapper.Map<IEnumerable<ProductSizeDto>>(productSizes);
         }
     }
 }
