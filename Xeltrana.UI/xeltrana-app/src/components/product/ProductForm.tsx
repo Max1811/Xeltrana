@@ -3,12 +3,7 @@ import axios from "axios";
 import api from "../../services/api";
 import "./productForm.css";
 import { Audience } from "./models/products.model";
-import {
-  Color,
-  ProductSize,
-  ProductVariant,
-  SizeType,
-} from "../../types/types";
+import { Color, ProductSize, ProductVariant } from "../../types/types";
 
 const ProductForm: React.FC = () => {
   const [tempRef] = useState(() => crypto.randomUUID());
@@ -94,7 +89,8 @@ const ProductForm: React.FC = () => {
       ...prev,
       {
         colorId: availableColors.length > 0 ? availableColors[0].id : 0,
-        productSizes: [{ size: "", quantity: 1, sizeId: SizeType.Alpha }],
+        sizeId: productSizes.length > 0 ? productSizes[0].id : 0,
+        stockQuantity: 0,
       },
     ]);
   };
@@ -113,45 +109,44 @@ const ProductForm: React.FC = () => {
     setProductVariants(newVariants);
   };
 
-  const handleSizeChange = (
-    variantIndex: number,
-    sizeIndex: number,
-    field: keyof ProductSize,
-    value: any
-  ) => {
+  const handleSizeChange = (variantIndex: number, value: any) => {
     const newVariants = [...productVariants];
-    const updatedSizes = [...newVariants[variantIndex].productSizes];
-    updatedSizes[sizeIndex] = {
-      ...updatedSizes[sizeIndex],
-      [field]: field === "quantity" ? Number(value) : value,
-    };
-    newVariants[variantIndex].productSizes = updatedSizes;
+    newVariants[variantIndex].sizeId = value;
+
     setProductVariants(newVariants);
   };
 
-  const handleAddSize = (variantIndex: number) => {
+  function handleStockQuantityChange(index: number, value: number): void {
     const newVariants = [...productVariants];
-    newVariants[variantIndex].productSizes.push({
-      size: "",
-      quantity: 1,
-      sizeId: SizeType.Alpha,
-    });
-    setProductVariants(newVariants);
-  };
+    newVariants[index].stockQuantity = value;
 
-  const handleRemoveSize = (variantIndex: number, sizeIndex: number) => {
-    const newVariants = [...productVariants];
-    newVariants[variantIndex].productSizes = newVariants[
-      variantIndex
-    ].productSizes.filter((_, i) => i !== sizeIndex);
     setProductVariants(newVariants);
-  };
+  }
+
+  // const handleAddSize = (variantIndex: number) => {
+  //   const newVariants = [...productVariants];
+  //   newVariants[variantIndex].productSizes.push({
+  //     size: "",
+  //     quantity: 1,
+  //     sizeId: SizeType.Alpha,
+  //   });
+  //   setProductVariants(newVariants);
+  // };
+
+  // const handleRemoveSize = (variantIndex: number, sizeIndex: number) => {
+  //   const newVariants = [...productVariants];
+  //   newVariants[variantIndex].productSizes = newVariants[
+  //     variantIndex
+  //   ].productSizes.filter((_, i) => i !== sizeIndex);
+  //   setProductVariants(newVariants);
+  // };
 
   const handleSubmit = async () => {
     for (const file of files) {
       await handleFileUpload(file);
     }
 
+    console.log(productVariants);
     await api.post("/products/product", {
       name,
       description,
@@ -287,37 +282,26 @@ const ProductForm: React.FC = () => {
             ))}
           </select>
 
+          <select
+            value={variant.sizeId}
+            onChange={(e) => handleSizeChange(i, Number(e.target.value))}
+          >
+            {productSizes.map((size) => (
+              <option key={size.id} value={size.id}>
+                {size.name}
+              </option>
+            ))}
+          </select>
+          <input
+            value={variant.stockQuantity}
+            onChange={(e) =>
+              handleStockQuantityChange(i, Number(e.target.value))
+            }
+          />
+
           <button type="button" onClick={() => handleRemoveVariant(i)}>
             Remove Variant
           </button>
-
-          <div>
-            {variant.productSizes.map((size, j) => (
-              <div key={j}>
-                <input
-                  placeholder="Size"
-                  value={size.size}
-                  onChange={(e) =>
-                    handleSizeChange(i, j, "size", e.target.value)
-                  }
-                />
-                <input
-                  type="number"
-                  placeholder="Quantity"
-                  value={size.quantity}
-                  onChange={(e) =>
-                    handleSizeChange(i, j, "quantity", e.target.value)
-                  }
-                />
-                <button onClick={() => handleRemoveSize(i, j)}>
-                  Remove Size
-                </button>
-              </div>
-            ))}
-            <button type="button" onClick={() => handleAddSize(i)}>
-              Add Size
-            </button>
-          </div>
         </div>
       ))}
 

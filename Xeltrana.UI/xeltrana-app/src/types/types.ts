@@ -34,14 +34,14 @@ export interface Product {
 
 export interface ProductVariant {
   colorId: number;
-  color?: Color;
-  productSizes: ProductSize[];
+  sizeId: number;
+  stockQuantity: number;
 }
 
 export interface ProductSize {
-  size: string;
-  sizeId: SizeType;
-  quantity: number;
+  name: string;
+  id: SizeType;
+  type: number;
 }
 
 export interface Color {

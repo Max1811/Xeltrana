@@ -59,7 +59,7 @@ namespace Store.Business.Services
         public async Task<Product> CreateProduct(Product product, string tempRef)
         {
             var createdProduct = await _appDbContext.Products.AddAsync(product);
-            //await _appDbContext.SaveChangesAsync();
+            await _appDbContext.SaveChangesAsync();
 
             var tempFolder = $"temp/{tempRef}/";
             var objects = await _s3Service.ListObjectsAsync(tempFolder);
@@ -68,18 +68,9 @@ namespace Store.Business.Services
             {
                 foreach (var obj in objects)
                 {
-                    var newKey = $"products/{product.Id}/{Path.GetFileName(obj.Key)}";
+                    var newKey = $"products/{createdProduct.Entity.Id}/{Path.GetFileName(obj.Key)}";
                     await _s3Service.MoveObjectAsync(obj.Key, newKey);
-                    _appDbContext.ProductImages.Add(new ProductImage { ProductId = product.Id, S3Key = newKey });
-                }
-            }
-
-            if (product.ProductVariants?.Any() == true)
-            {
-                foreach (var variant in product.ProductVariants)
-                {
-                    variant.ProductId = product.Id;
-                    _appDbContext.ProductVariants.Add(variant);
+                    _appDbContext.ProductImages.Add(new ProductImage { ProductId = createdProduct.Entity.Id, S3Key = newKey });
                 }
             }
 
