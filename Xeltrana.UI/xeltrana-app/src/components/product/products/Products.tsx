@@ -3,13 +3,13 @@ import ProductCard from "../productCard/ProductCard";
 import "./products.css";
 import api from "../../../services/api";
 import { useSearchParams } from "react-router-dom";
-import { Product } from "../../../types/types";
+import { ViewProduct } from "../../../types/types";
 
 const Products: React.FC = () => {
   const [searchParams] = useSearchParams();
   const audience = searchParams.get("audience");
 
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ViewProduct[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,7 +22,7 @@ const Products: React.FC = () => {
           url = url.concat(`?audience=${audience}`);
         }
 
-        const response = await api.get<Product[]>(url);
+        const response = await api.get<ViewProduct[]>(url);
         setProducts(response.data);
       } catch (err) {
         setError("Failed to fetch products.");

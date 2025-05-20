@@ -18,6 +18,6 @@
         public int AudienceId { get; set; }
 
         public IEnumerable<string> Images { get; set; }
-        public List<ProductVariantDataDto> Variants { get; set; }
+        public List<ProductVariantDataDto> ProductVariants { get; set; }
     }
 }

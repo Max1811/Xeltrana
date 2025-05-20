@@ -1,0 +1,31 @@
+.toggle-container {
+  display: inline-flex;
+  background-color: #e5ded6;
+  border-radius: 9999px;
+  padding: 4px;
+  margin: 0;
+  gap: 4px;
+
+  .toggle-button {
+    padding: 10px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 9999px;
+    background-color: transparent;
+    color: #374151;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .toggle-button:focus {
+    outline: none;
+  }
+
+  .toggle-button.active {
+    background-color: var(--light-gold-color);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+}

@@ -3,7 +3,12 @@ import axios from "axios";
 import api from "../../services/api";
 import "./productForm.css";
 import { Audience } from "./models/products.model";
-import { Color, ProductSize, ProductVariant } from "../../types/types";
+import {
+  Color,
+  ProductSize,
+  ProductVariant,
+  ProductVariantCreate,
+} from "../../types/types";
 
 const ProductForm: React.FC = () => {
   const [tempRef] = useState(() => crypto.randomUUID());
@@ -20,6 +25,10 @@ const ProductForm: React.FC = () => {
   const [productSizes, setProductSizes] = useState<ProductSize[]>([]);
 
   const [productVariants, setProductVariants] = useState<ProductVariant[]>([]);
+
+  const [createProductVariants, setCreateProductVariants] = useState<
+    ProductVariantCreate[]
+  >([]);
 
   useEffect(() => {
     const fetchProductData = async () => {

@@ -8,6 +8,11 @@ export enum SizeType {
   Numeric = 2,
 }
 
+export const Gender = {
+  Male: "male",
+  Female: "female",
+};
+
 export interface User {
   id: number;
   name: string;
@@ -19,7 +24,15 @@ export interface UserRole {
   role: string;
 }
 
-export interface Product {
+export interface Product extends BaseProduct {
+  productVariants: ProductVariant[];
+}
+
+export interface ViewProduct extends BaseProduct {
+  productVariants: ViewProductVariant[];
+}
+
+interface BaseProduct {
   id: number;
   name: string;
   description: string;
@@ -29,13 +42,24 @@ export interface Product {
   categoryName: string;
   audienceId: number;
   images: string[];
-  productVariants: ProductVariant[];
+}
+
+export interface ProductVariantCreate {
+  availableItems: ColorCreate[];
 }
 
 export interface ProductVariant {
   colorId: number;
   sizeId: number;
   stockQuantity: number;
+}
+
+export interface ViewProductVariant {
+  color: string;
+  colorId: number;
+  hexCode: string;
+  size: string;
+  sizeId: number;
 }
 
 export interface ProductSize {
@@ -50,12 +74,15 @@ export interface Color {
   hex: string;
 }
 
-// interface CreateProductRequest {
-//   name: string;
-//   description: string;
-//   price: number;
-//   categoryId: number;
-//   audienceId: number;
-//   tempRef: string;
-//   productVariants: ProductVariant[];
-// }
+interface ColorCreate {
+  color: string;
+  colorId: number;
+  hexCode: string;
+  sizes: ProductSizeCreate[];
+}
+
+interface ProductSizeCreate {
+  sizeId: number;
+  size: string;
+  stockAmount: number;
+}

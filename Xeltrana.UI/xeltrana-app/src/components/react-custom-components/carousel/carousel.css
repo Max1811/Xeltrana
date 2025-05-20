@@ -1,0 +1,18 @@
+.products-carousel-container {
+  margin: 45px;
+}
+
+.carousel-slide {
+  padding: 10px;
+}
+
+.products-carousel-container .slick-prev::before,
+.products-carousel-container .slick-next::before {
+  color: black !important;
+  font-size: 30px !important;
+}
+
+.slick-slide {
+  display: flex !important;
+  justify-content: center !important;
+}
