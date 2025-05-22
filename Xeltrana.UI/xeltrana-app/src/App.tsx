@@ -6,13 +6,14 @@ import Dashboard from "./components/dashboard/dashboard";
 import ProtectedRoute from "./components/protectedRoute";
 import Register from "./components/auth/register";
 import Layout from "./components/header/layout";
-import Settings from "./components/settings/settings";
 import "./styles/variables.css";
 import CreateProduct from "./components/product/createProduct";
 import Products from "./components/product/products/Products";
 import { StoreProvider } from "./context/storeContext";
 import Favorites from "./components/favorites/favourites";
 import ViewProductPage from "./components/product/viewProduct/viewProduct";
+import EditProduct from "./components/product/editProduct";
+import SettingsPanel from "./components/settings/settingsPanel";
 
 const App = () => (
   <Provider store={store}>
@@ -28,9 +29,13 @@ const App = () => (
                 path="products/create-product"
                 element={<CreateProduct />}
               />
+              <Route
+                path="products/edit-product/:id"
+                element={<EditProduct />}
+              />
               <Route path="products" element={<Products />} />
               <Route path="products/:id" element={<ViewProductPage />} />
-              <Route path="settings" element={<Settings />} />
+              <Route path="settings" element={<SettingsPanel />} />
               <Route path="favorites" element={<Favorites />} />
               {/* other protected routes */}
             </Route>

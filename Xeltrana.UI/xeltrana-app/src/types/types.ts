@@ -3,15 +3,16 @@ export const UserRoles = {
   Client: 2,
 };
 
-export enum SizeType {
-  Alpha = 1,
-  Numeric = 2,
-}
-
 export const Gender = {
   Male: "male",
   Female: "female",
 };
+
+export enum SizeType {
+  Clothes = 0,
+  Shoes = 1,
+  Accessories = 2,
+}
 
 export interface User {
   id: number;
@@ -48,9 +49,25 @@ export interface ProductVariantCreate {
   availableItems: ColorCreate[];
 }
 
+interface ColorCreate {
+  color: string;
+  colorId: number;
+  hexCode: string;
+  sizes: ProductSizeCreate[];
+}
+
+interface ProductSizeCreate {
+  sizeId: number;
+  size: string;
+  stockAmount: number;
+}
+
 export interface ProductVariant {
   colorId: number;
+  color?: string;
+  hexCode?: string;
   sizeId: number;
+  size?: string;
   stockQuantity: number;
 }
 
@@ -71,18 +88,5 @@ export interface ProductSize {
 export interface Color {
   id: number;
   name: string;
-  hex: string;
-}
-
-interface ColorCreate {
-  color: string;
-  colorId: number;
   hexCode: string;
-  sizes: ProductSizeCreate[];
-}
-
-interface ProductSizeCreate {
-  sizeId: number;
-  size: string;
-  stockAmount: number;
 }

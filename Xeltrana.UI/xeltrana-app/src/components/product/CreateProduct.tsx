@@ -2,7 +2,7 @@ import ProductForm from "./productForm";
 
 const CreateProduct = () => {
   return (
-    <div>
+    <div className="create-product-form-container">
       <ProductForm />
     </div>
   );

@@ -35,63 +35,65 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
-    <div className="product-card">
-      <div className="product-card-clickable">
-        <div
-          className="product-images"
-          onClick={() => {
-            navigate(`/products/${product.id}`);
-          }}
-        >
-          {product.images?.length > 0 ? (
-            <>
-              <img
-                src={product.images[currentIndex]}
-                alt={`${product.name} - ${currentIndex + 1}`}
-                className="product-image"
-              />
-            </>
-          ) : (
-            <div className="no-image">No Image</div>
-          )}
-        </div>
-        <div className="product-info">
-          <div className="product-name-and-price-container">
-            <h3 className="product-name">{product.name}</h3>
-            <div className="product-price">
-              ${product.originalPrice?.toFixed(2)}
+    <div className="product-card-container">
+      <div className="product-card">
+        <div className="product-card-clickable">
+          <div
+            className="product-images"
+            onClick={() => {
+              navigate(`/products/${product.id}`);
+            }}
+          >
+            {product.images?.length > 0 ? (
+              <>
+                <img
+                  src={product.images[currentIndex]}
+                  alt={`${product.name} - ${currentIndex + 1}`}
+                  className="product-image"
+                />
+              </>
+            ) : (
+              <div className="no-image">No Image</div>
+            )}
+          </div>
+          <div className="product-info">
+            <div className="product-name-and-price-container">
+              <h3 className="product-name">{product.name}</h3>
+              <div className="product-price">
+                ${product.originalPrice?.toFixed(2)}
+              </div>
+            </div>
+            <p className="product-description">{product.description}</p>
+
+            <div className="product-available-colors">
+              <p>Colors: </p>
+              {uniqueColors.length > 0 &&
+                uniqueColors.map((variant) => (
+                  <div
+                    className="product-variant-color"
+                    style={{
+                      backgroundColor: variant,
+                    }}
+                  ></div>
+                ))}
             </div>
           </div>
-          <p className="product-description">{product.description}</p>
+          <div className="product-card-footer">
+            <button
+              className="btn-icon like-button"
+              aria-label="Add to Favorites"
+            >
+              <i
+                className={`fas fa-heart like-button ${liked ? "liked" : ""}`}
+                onClick={toggleLike}
+              ></i>
+            </button>
 
-          <div className="product-available-colors">
-            <p>Colors: </p>
-            {uniqueColors.length > 0 &&
-              uniqueColors.map((variant) => (
-                <div
-                  className="product-variant-color"
-                  style={{
-                    backgroundColor: variant,
-                  }}
-                ></div>
-              ))}
+            <button className="btn-add-to-cart">
+              <i className="fas fa-shopping-cart"></i>
+              <span>Add</span>
+            </button>
           </div>
-        </div>
-        <div className="product-card-footer">
-          <button
-            className="btn-icon like-button"
-            aria-label="Add to Favorites"
-          >
-            <i
-              className={`fas fa-heart like-button ${liked ? "liked" : ""}`}
-              onClick={toggleLike}
-            ></i>
-          </button>
-
-          <button className="btn-add-to-cart">
-            <i className="fas fa-shopping-cart"></i>
-            <span>Add</span>
-          </button>
         </div>
       </div>
     </div>

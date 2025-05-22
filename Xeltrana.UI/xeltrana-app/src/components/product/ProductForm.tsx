@@ -5,12 +5,23 @@ import "./productForm.css";
 import { Audience } from "./models/products.model";
 import {
   Color,
+  Product,
   ProductSize,
-  ProductVariant,
   ProductVariantCreate,
+  SizeType,
 } from "../../types/types";
+import {
+  mapProductVariantCreateToVariants,
+  mapVariantsToProductVariantCreate,
+} from "./productForm.model";
 
-const ProductForm: React.FC = () => {
+type ProductFormProps = {
+  productId?: number;
+};
+
+const ProductForm: React.FC<ProductFormProps> = ({ productId }) => {
+  const productOption = productId ? "Update Product" : "Create Product";
+
   const [tempRef] = useState(() => crypto.randomUUID());
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -22,13 +33,48 @@ const ProductForm: React.FC = () => {
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [availableColors, setAvailableColors] = useState<Color[]>([]);
+  const [selectedType, setSelectedType] = useState<SizeType>(SizeType.Clothes);
   const [productSizes, setProductSizes] = useState<ProductSize[]>([]);
+  const [createProductVariant, setCreateProductVariant] =
+    useState<ProductVariantCreate>({ availableItems: [] });
 
-  const [productVariants, setProductVariants] = useState<ProductVariant[]>([]);
+  const sizeTypeOptions = Object.keys(SizeType)
+    .filter((key) => !isNaN(Number(SizeType[key as any])))
+    .map((key) => ({
+      label: key,
+      value: SizeType[key as keyof typeof SizeType],
+    }));
 
-  const [createProductVariants, setCreateProductVariants] = useState<
-    ProductVariantCreate[]
-  >([]);
+  useEffect(() => {
+    const fetchEditProductData = async () => {
+      const product = await api.get<Product>(`/products/${productId}`);
+      const productData = product.data;
+
+      setName(productData.name);
+      setDescription(productData.description);
+      setPrice(productData.originalPrice.toString());
+      setCategory(productData.categoryId);
+      setIsForMen(
+        productData.audienceId === Audience.Men ||
+          productData.audienceId === Audience.Unisex
+      );
+      setIsForWomen(
+        productData.audienceId === Audience.Women ||
+          productData.audienceId === Audience.Unisex
+      );
+
+      setPreviewUrls(productData.images);
+
+      const mappedProductVariantData = mapVariantsToProductVariantCreate(
+        productData.productVariants
+      );
+      setCreateProductVariant(mappedProductVariantData);
+    };
+
+    if (productId) {
+      fetchEditProductData();
+    }
+  }, [productId]);
 
   useEffect(() => {
     const fetchProductData = async () => {
@@ -37,6 +83,7 @@ const ProductForm: React.FC = () => {
         setCategories(categoriesResult.data as []);
 
         const productColors = await api.get<Color[]>("/products/colors");
+        console.log(productColors.data);
         setAvailableColors(productColors.data);
 
         const productSizesData = await api.get<ProductSize[]>(
@@ -93,90 +140,133 @@ const ProductForm: React.FC = () => {
     });
   };
 
-  const handleAddVariant = () => {
-    setProductVariants((prev) => [
-      ...prev,
-      {
-        colorId: availableColors.length > 0 ? availableColors[0].id : 0,
-        sizeId: productSizes.length > 0 ? productSizes[0].id : 0,
-        stockQuantity: 0,
-      },
-    ]);
+  const toggleColor = (color: {
+    colorId: number;
+    hexCode: string;
+    color: string;
+  }) => {
+    setCreateProductVariant((prev) => {
+      const exists = prev.availableItems.find(
+        (c) => c.colorId === color.colorId
+      );
+
+      const newAvailableItems = exists
+        ? prev.availableItems.filter((c) => c.colorId !== color.colorId)
+        : [...prev.availableItems, { ...color, sizes: [] }];
+
+      return { ...prev, availableItems: newAvailableItems };
+    });
   };
 
-  const handleRemoveVariant = (index: number) => {
-    setProductVariants((prev) => prev.filter((_, i) => i !== index));
+  const addSizeToColor = (colorId: number, size: ProductSize) => {
+    setCreateProductVariant((prev) => {
+      const updatedItems = prev.availableItems.map((color) => {
+        if (color.colorId !== colorId) return color;
+
+        const alreadyExists = color.sizes.some((s) => s.sizeId === size.id);
+        if (alreadyExists) return color;
+
+        return {
+          ...color,
+          sizes: [
+            ...color.sizes,
+            { sizeId: size.id, size: size.name, stockAmount: 1 },
+          ],
+        };
+      });
+
+      return { ...prev, availableItems: updatedItems };
+    });
   };
 
-  const handleVariantChange = (
-    index: number,
-    field: keyof ProductVariant,
-    value: any
+  const removeSizeFromColor = (colorId: number, sizeId: number) => {
+    setCreateProductVariant((prev) => {
+      const updatedItems = prev.availableItems.map((color) => {
+        if (color.colorId !== colorId) return color;
+
+        return {
+          ...color,
+          sizes: color.sizes.filter((size) => size.sizeId !== sizeId),
+        };
+      });
+
+      return { ...prev, availableItems: updatedItems };
+    });
+  };
+
+  const updateStockAmount = (
+    colorId: number,
+    sizeId: number,
+    stock: number
   ) => {
-    const newVariants = [...productVariants];
-    newVariants[index] = { ...newVariants[index], [field]: value };
-    setProductVariants(newVariants);
+    setCreateProductVariant((prev) => {
+      const updatedItems = prev.availableItems.map((color) => {
+        if (color.colorId !== colorId) return color;
+
+        const updatedSizes = color.sizes.map((size) =>
+          size.sizeId === sizeId ? { ...size, stockAmount: stock } : size
+        );
+
+        return { ...color, sizes: updatedSizes };
+      });
+
+      return { ...prev, availableItems: updatedItems };
+    });
   };
-
-  const handleSizeChange = (variantIndex: number, value: any) => {
-    const newVariants = [...productVariants];
-    newVariants[variantIndex].sizeId = value;
-
-    setProductVariants(newVariants);
-  };
-
-  function handleStockQuantityChange(index: number, value: number): void {
-    const newVariants = [...productVariants];
-    newVariants[index].stockQuantity = value;
-
-    setProductVariants(newVariants);
-  }
-
-  // const handleAddSize = (variantIndex: number) => {
-  //   const newVariants = [...productVariants];
-  //   newVariants[variantIndex].productSizes.push({
-  //     size: "",
-  //     quantity: 1,
-  //     sizeId: SizeType.Alpha,
-  //   });
-  //   setProductVariants(newVariants);
-  // };
-
-  // const handleRemoveSize = (variantIndex: number, sizeIndex: number) => {
-  //   const newVariants = [...productVariants];
-  //   newVariants[variantIndex].productSizes = newVariants[
-  //     variantIndex
-  //   ].productSizes.filter((_, i) => i !== sizeIndex);
-  //   setProductVariants(newVariants);
-  // };
 
   const handleSubmit = async () => {
     for (const file of files) {
       await handleFileUpload(file);
     }
+    console.log(files);
+    console.log(previewUrls);
+    const productVariantsMapped =
+      mapProductVariantCreateToVariants(createProductVariant);
 
-    console.log(productVariants);
-    await api.post("/products/product", {
-      name,
-      description,
-      originalPrice: Number(price),
-      categoryId: category,
-      audienceId:
-        isForMen && isForWomen
-          ? Audience.Unisex
-          : isForMen
-          ? Audience.Men
-          : Audience.Women,
-      tempRef,
-      productVariants,
-    });
+    if (productId) {
+      const updateProduct = {
+        id: productId,
+        name,
+        description,
+        originalPrice: Number(price),
+        categoryId: category,
+        audienceId:
+          isForMen && isForWomen
+            ? Audience.Unisex
+            : isForMen
+            ? Audience.Men
+            : Audience.Women,
+        tempRef,
+        productVariants: productVariantsMapped,
+        Images: previewUrls,
+      };
 
-    alert("Successfully created!");
+      await api.put("/products/product", updateProduct);
+    } else {
+      const createProduct = {
+        name,
+        description,
+        originalPrice: Number(price),
+        categoryId: category,
+        audienceId:
+          isForMen && isForWomen
+            ? Audience.Unisex
+            : isForMen
+            ? Audience.Men
+            : Audience.Women,
+        tempRef,
+        productVariants: productVariantsMapped,
+      };
+
+      await api.post("/products/product", createProduct);
+    }
+
+    alert(`Successfully ${productId ? "Updated" : "Created"}!`);
   };
 
   return (
     <div className="form-container">
-      <h2 className="form-title">Create Product</h2>
+      <h2 className="form-title">{productOption}</h2>
 
       <input
         className="form-input"
@@ -199,7 +289,9 @@ const ProductForm: React.FC = () => {
         onChange={(e) => setPrice(e.target.value)}
       />
 
+      <label htmlFor="categorySelect">Select Category:</label>
       <select
+        id="categorySelect"
         className="form-input"
         value={category}
         onChange={(e) => setCategory(Number(e.target.value))}
@@ -263,59 +355,117 @@ const ProductForm: React.FC = () => {
           </div>
         ))}
       </div>
-
-      <h3>Product Variants</h3>
-      <button type="button" onClick={handleAddVariant}>
-        Add Variant
-      </button>
-
-      {productVariants.map((variant, i) => (
-        <div
-          key={i}
-          style={{
-            margin: "10px 0",
-            border: "1px solid #ccc",
-            padding: "10px",
-          }}
+      <div className="colors-section">
+        <label htmlFor="sizeTypeSelect">Select Size Type:</label>
+        <select
+          id="sizeTypeSelect"
+          value={selectedType}
+          onChange={(e) => setSelectedType(Number(e.target.value))}
+          className="custom-select"
         >
-          <select
-            value={variant.colorId}
-            onChange={(e) =>
-              handleVariantChange(i, "colorId", Number(e.target.value))
-            }
-          >
-            {availableColors.map((color) => (
-              <option key={color.id} value={color.id}>
-                {color.name}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={variant.sizeId}
-            onChange={(e) => handleSizeChange(i, Number(e.target.value))}
-          >
-            {productSizes.map((size) => (
-              <option key={size.id} value={size.id}>
-                {size.name}
-              </option>
-            ))}
-          </select>
-          <input
-            value={variant.stockQuantity}
-            onChange={(e) =>
-              handleStockQuantityChange(i, Number(e.target.value))
-            }
-          />
-
-          <button type="button" onClick={() => handleRemoveVariant(i)}>
-            Remove Variant
-          </button>
+          {sizeTypeOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <p>Select Colors:</p>
+        <div className="color-buttons">
+          {availableColors.map((color) => {
+            const selected = createProductVariant.availableItems.some(
+              (c) => c.colorId === color.id
+            );
+            return (
+              <button
+                key={color.id}
+                className={`color-button ${selected ? "selected" : ""}`}
+                style={{ backgroundColor: color.hexCode }}
+                onClick={() =>
+                  toggleColor({
+                    color: color.name,
+                    colorId: color.id,
+                    hexCode: color.hexCode,
+                  })
+                }
+              />
+            );
+          })}
         </div>
-      ))}
+      </div>
+
+      <div className="variants-section">
+        {createProductVariant.availableItems.map((color) => (
+          <div key={color.colorId} className="color-block">
+            <div
+              className="color-size-wrapper"
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              <h3>{color.color}</h3>
+              <div
+                className={"color-button"}
+                style={{
+                  backgroundColor: color.hexCode,
+                  marginLeft: "10px",
+                  cursor: "default",
+                }}
+              ></div>
+            </div>
+
+            <div className="size-buttons">
+              {productSizes
+                .filter((size) => size.type === selectedType)
+                .map((size) => {
+                  const alreadyAdded = color.sizes.some(
+                    (s) => s.sizeId === size.id
+                  );
+                  return (
+                    <button
+                      key={size.id}
+                      className={`size-button ${
+                        alreadyAdded ? "disabled" : ""
+                      }`}
+                      onClick={() => addSizeToColor(color.colorId, size)}
+                      disabled={alreadyAdded}
+                    >
+                      {size.name}
+                    </button>
+                  );
+                })}
+            </div>
+
+            <div className="stock-inputs">
+              {color.sizes.map((size) => (
+                <div key={size.sizeId} className="stock-row">
+                  <span className="size-label">{size.size}</span>
+                  <input
+                    type="number"
+                    value={size.stockAmount}
+                    className="stock-input"
+                    onChange={(e) =>
+                      updateStockAmount(
+                        color.colorId,
+                        size.sizeId,
+                        parseInt(e.target.value) || 0
+                      )
+                    }
+                  />
+                  <button
+                    className="remove-size"
+                    onClick={() =>
+                      removeSizeFromColor(color.colorId, size.sizeId)
+                    }
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
 
       <button className="form-button" onClick={handleSubmit}>
-        Create Product
+        {productOption}
       </button>
     </div>
   );

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.Business.Models;
 using Store.Business.Services;
-using Store.DataAccess.Entities;
 using Store.Shared.Enums;
 using Store.WebAPI.Models;
 
@@ -35,6 +34,15 @@ namespace Store.WebAPI.Controllers
             var productEntity = _mapper.Map<Product>(product);
 
             return await _productService.CreateProduct(productEntity, product.TempRef);
+        }
+
+        [HttpPut("product")]
+        public async Task<Product?> UpdateProduct([FromBody] UpdateProductDto product)
+        {
+            var images = await _productService.HandleUpdateProductImages(product.Images, product.TempRef, product.Id);
+            product.Images = images;
+
+            return await _productService.UpdateProductAsync(product);
         }
 
         [HttpGet("categories")]

@@ -31,6 +31,13 @@ const SubHeader = () => {
           </div>
         </Link>
       </nav>
+      <nav>
+        <Link to="/cart">
+          <div className="btn-add-to-cart">
+            <i className="fas fa-shopping-cart"></i>
+          </div>
+        </Link>
+      </nav>
     </header>
   );
 };

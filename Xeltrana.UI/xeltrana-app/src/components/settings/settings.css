@@ -1,0 +1,50 @@
+.settings-container {
+  display: flex;
+  height: 100vh;
+  font-family: sans-serif;
+}
+
+.sidebar {
+  width: 240px;
+  border-right: 1px solid #ccc;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.settings-options {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.option-button {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  border: none;
+  background-color: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.option-button:hover {
+  background-color: #e0e0e0;
+}
+
+.option-button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.content {
+  flex: 1;
+  padding: 30px;
+}
