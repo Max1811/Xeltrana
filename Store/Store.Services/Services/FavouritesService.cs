@@ -11,8 +11,9 @@ namespace Store.Business.Services
         Task<int> GetFavouritesCount(int userId);
         Task<IEnumerable<FavoritesDto>> GetFavourites(int userId);
         Task AddFavorite(Favorite favorite);
-        Favorite RemoveFavorite(int productId, int userId);
+        Favorite? RemoveFavorite(int productId, int userId);
         Task SwitchFavorite(Favorite favorite);
+        Task<bool> IsProductFavorite(int productId);
     }
 
     public class FavouritesService : IFavouritesService
@@ -53,9 +54,18 @@ namespace Store.Business.Services
             return await _appDbContext.Favorites.Where(f => f.UserId == userId).CountAsync();
         }
 
-        public Favorite RemoveFavorite(int productId, int userId)
+        public Favorite? RemoveFavorite(int productId, int userId)
         {
-            return _appDbContext.Favorites.Remove(new Favorite { ProductId = productId, UserId = userId }).Entity;
+            var favorite = _appDbContext.Favorites
+                .FirstOrDefault(f => f.ProductId == productId && f.UserId == userId);
+
+            if (favorite != null)
+            {
+                _appDbContext.Favorites.Remove(favorite);
+                _appDbContext.SaveChanges();
+            }
+
+            return favorite;
         }
 
         public async Task SwitchFavorite(Favorite favorite)
@@ -72,6 +82,13 @@ namespace Store.Business.Services
             }
 
             await _appDbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsProductFavorite(int productId)
+        {
+            var favorite = await _appDbContext.Favorites.FirstOrDefaultAsync(f =>  f.ProductId == productId);
+
+            return favorite != null;
         }
 
         private async Task<Favorite?> GetFavorite(Favorite favorite)

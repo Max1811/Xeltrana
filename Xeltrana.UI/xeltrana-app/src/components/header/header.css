@@ -74,7 +74,7 @@
   }
 }
 
-.heart-container {
+.icon-container {
   position: relative;
   display: inline-block;
   margin-left: 3rem;
@@ -86,7 +86,17 @@
   font-size: 1.5rem;
 }
 
-.heart-count {
+.custom-shopping-cart {
+  font-size: 1.5rem;
+  color: black;
+  background-color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heart-count,
+.cart-count {
   position: absolute;
   top: -0.4rem;
   right: -0.5rem;

@@ -33,6 +33,9 @@ namespace Store.DataAccess.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductVariantId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -42,6 +45,8 @@ namespace Store.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductVariantId");
 
                     b.HasIndex("UserId");
 
@@ -779,6 +784,10 @@ namespace Store.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Store.DataAccess.Entities.ProductVariant", "ProductVariant")
+                        .WithMany()
+                        .HasForeignKey("ProductVariantId");
+
                     b.HasOne("User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -786,6 +795,8 @@ namespace Store.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+
+                    b.Navigation("ProductVariant");
 
                     b.Navigation("User");
                 });
@@ -918,7 +929,7 @@ namespace Store.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Product", "Product")
+                    b.HasOne("Product", null)
                         .WithMany("ProductVariants")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -931,8 +942,6 @@ namespace Store.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Color");
-
-                    b.Navigation("Product");
 
                     b.Navigation("Size");
                 });

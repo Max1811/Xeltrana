@@ -4,7 +4,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useStoreContext } from "../../context/storeContext";
 
 const SubHeader = () => {
-  const { favorites } = useStoreContext();
+  const { favorites, cart } = useStoreContext();
 
   return (
     <header className="sub-header">
@@ -25,7 +25,7 @@ const SubHeader = () => {
       </nav>
       <nav>
         <Link to="/favorites">
-          <div className="heart-container">
+          <div className="icon-container">
             <i className="fas fa-heart custom-heart"></i>
             <span className="heart-count">{favorites.count}</span>
           </div>
@@ -33,8 +33,9 @@ const SubHeader = () => {
       </nav>
       <nav>
         <Link to="/cart">
-          <div className="btn-add-to-cart">
-            <i className="fas fa-shopping-cart"></i>
+          <div className="icon-container">
+            <i className="fas fa-basket-shopping custom-shopping-cart"></i>
+            <span className="cart-count">{cart.count}</span>
           </div>
         </Link>
       </nav>

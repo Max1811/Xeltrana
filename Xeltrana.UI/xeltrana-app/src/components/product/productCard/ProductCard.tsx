@@ -12,26 +12,32 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const navigate = useNavigate();
   const uniqueColorsMap = new Map(
     product.productVariants
-      .filter((variant) => variant.color) // Ensure color exists
+      .filter((variant) => variant.color)
       .map((variant) => [variant.hexCode, variant.color])
   );
   const uniqueColors = Array.from(uniqueColorsMap.values());
 
   const [currentIndex] = useState(0);
   const [liked, setLiked] = useState(false);
+  const [isAddedToCart, setIsAddedToCart] = useState(false);
 
-  const { favorites } = useStoreContext();
+  const { favorites, cart } = useStoreContext();
 
   useEffect(() => {
     const isFav = favorites.items.some(
       (item) => item.product.id === product.id
     );
     setLiked(isFav);
-  }, [favorites.items, product.id]);
+    const isInCart = cart.items.some((item) => item.product.id === product.id);
+    setIsAddedToCart(isInCart);
+  }, [favorites.items, cart.items, product.id]);
 
   const toggleLike = async () => {
-    console.log(liked);
     await favorites.switchFavorite(product.id);
+  };
+
+  const toggleCart = async () => {
+    await cart.addToCart(product.id);
   };
 
   return (
@@ -89,9 +95,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               ></i>
             </button>
 
-            <button className="btn-add-to-cart">
-              <i className="fas fa-shopping-cart"></i>
-              <span>Add</span>
+            <button
+              type="button"
+              className={`btn-add-to-cart ${
+                isAddedToCart ? "added-to-cart" : ""
+              }`}
+              onClick={toggleCart}
+              aria-pressed={isAddedToCart}
+            >
+              {!isAddedToCart && (
+                <i className="fas fa-shopping-cart" aria-hidden="true"></i>
+              )}
+              <span>{isAddedToCart ? "Added!" : "Add to Cart"}</span>
             </button>
           </div>
         </div>

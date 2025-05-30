@@ -14,6 +14,8 @@ import Favorites from "./components/favorites/favourites";
 import ViewProductPage from "./components/product/viewProduct/viewProduct";
 import EditProduct from "./components/product/editProduct";
 import SettingsPanel from "./components/settings/settingsPanel";
+import Cart from "./components/cart/cart";
+import Order from "./components/order/order";
 
 const App = () => (
   <Provider store={store}>
@@ -37,6 +39,8 @@ const App = () => (
               <Route path="products/:id" element={<ViewProductPage />} />
               <Route path="settings" element={<SettingsPanel />} />
               <Route path="favorites" element={<Favorites />} />
+              <Route path="cart" element={<Cart />} />
+              <Route path="order" element={<Order />} />
               {/* other protected routes */}
             </Route>
           </Route>

@@ -55,6 +55,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ImageUrlResolver>();
 builder.Services.AddScoped<IS3Service, S3Service>();
 builder.Services.AddScoped<IFavouritesService, FavouritesService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 builder.Services.AddCors(options =>
 {

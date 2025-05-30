@@ -1,8 +1,11 @@
 :root {
   --primary-color: #eee;
   --secondary-color: #111;
+  --light-gold-inactive-color: #eae2d3;
   --light-gold-color: #c6b695;
+  --light-gold-rgb: 198, 182, 149;
   --light-gold-hover-color: #a79776;
+  --success-color: #4f9a68;
   --font-size-base: 16px;
   --spacing-sm: 8px;
   --spacing-md: 16px;

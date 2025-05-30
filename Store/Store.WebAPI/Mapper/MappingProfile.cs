@@ -15,8 +15,15 @@ namespace Store.WebAPI.Mapper
             CreateMap<ProductImageDto[], ProductImage[]>();
 
             CreateMap<Favorite, FavoritesDto>();
+            CreateMap<CartItem, CartItemDto>();
 
             CreateMap<AddFavouriteModel, Favorite>();
+            CreateMap<AddToCartModel, CartItem>();
+
+            CreateMap<ProductVariant, ProductVariantDataDto>()
+                .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.Size.Name))
+                .ForMember(dest => dest.HexCode, opt => opt.MapFrom(src => src.Color.HexCode))
+                .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.Color.Name));
 
             CreateMap<ProductDto, Product>()
                 .ForMember(dest => dest.OriginalPrice, opt => opt.MapFrom(src => src.OriginalPrice))
