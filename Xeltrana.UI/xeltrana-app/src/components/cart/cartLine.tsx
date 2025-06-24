@@ -3,10 +3,11 @@ import debounce from "lodash.debounce";
 import "./cart.css";
 import { ViewProduct, ViewProductVariant } from "../../types/types";
 import api from "../../services/api";
-import VariantSelector from "./productVariantSelector";
+import VariantSelector from "./cartItemVariantSelector";
 
 interface CartLineProps {
   product: ViewProduct;
+  cartItemId: number;
   productVariant: ViewProductVariant;
   quantity: number;
   maxAvailableQuantity: number;
@@ -19,6 +20,7 @@ interface CartLineProps {
 
 const CartLine: React.FC<CartLineProps> = ({
   product,
+  cartItemId,
   productVariant,
   quantity,
   maxAvailableQuantity,
@@ -29,6 +31,8 @@ const CartLine: React.FC<CartLineProps> = ({
   const [productVariantData, setProductVariantData] = useState<
     ViewProductVariant[] | null
   >(null);
+  const [isEditModeEnabled, setIsEditModeEnabled] = useState(false);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdate = useCallback(
     debounce((newQty: number) => {
@@ -48,10 +52,8 @@ const CartLine: React.FC<CartLineProps> = ({
       console.log(result.data);
     };
 
-    if (!productVariant) {
-      fetchProductVariant();
-    }
-  }, []);
+    fetchProductVariant();
+  }, [product.id, productVariant]);
 
   useEffect(() => {
     setLocalQuantity(quantity);
@@ -71,15 +73,22 @@ const CartLine: React.FC<CartLineProps> = ({
     }
   };
 
+  const toggleEditMode = () => {
+    setIsEditModeEnabled((prev) => !prev);
+  };
+
   return (
     <div className="cart-line">
+      {productVariant && (
+        <i className="fas fa-pen edit-icon" onClick={toggleEditMode}></i>
+      )}
       <img src={product.images[0]} alt={product.name} className="cart-image" />
 
       <div className="cart-info">
         <div className="cart-product-variant-info">
           <h4 className="cart-product-name">{product.name}</h4>
 
-          {productVariant ? (
+          {productVariant && !isEditModeEnabled ? (
             <div className="cart-variant-info">
               <span className="cart-size">{productVariant?.size}</span>
               <div
@@ -89,7 +98,11 @@ const CartLine: React.FC<CartLineProps> = ({
               ></div>
             </div>
           ) : (
-            <VariantSelector variants={productVariantData} />
+            <VariantSelector
+              variants={productVariantData}
+              cartItemId={cartItemId}
+              selectedProductVariantId={productVariant?.id}
+            />
           )}
 
           <strong className="cart-price">

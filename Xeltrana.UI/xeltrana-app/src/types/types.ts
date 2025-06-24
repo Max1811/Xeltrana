@@ -72,6 +72,7 @@ export interface ProductVariant {
 }
 
 export interface ViewProductVariant {
+  id: number;
   color: string;
   colorId: number;
   hexCode: string;

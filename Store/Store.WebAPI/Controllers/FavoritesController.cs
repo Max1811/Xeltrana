@@ -40,7 +40,7 @@ namespace Store.WebAPI.Controllers
         }
 
         [HttpDelete("{productId}")]
-        public Favorite RemoveFavorite(int productId, [FromBody] RemoveFavoriteModel removeFavoriteModel)
+        public Favorite? RemoveFavorite(int productId, [FromBody] RemoveFavoriteModel removeFavoriteModel)
         {
             return _favouritesService.RemoveFavorite(productId, removeFavoriteModel.UserId);
         }
@@ -49,6 +49,12 @@ namespace Store.WebAPI.Controllers
         public async Task SwitchFavorite([FromBody] AddFavouriteModel switchFavoriteModel)
         {
             await _favouritesService.SwitchFavorite(_mapper.Map<Favorite>(switchFavoriteModel));
+        }
+
+        [HttpGet("isFavorite/{productId}")]
+        public async Task<bool> IsFavoriteProduct(int productId)
+        {
+            return await _favouritesService.IsProductFavorite(productId);
         }
     }
 }

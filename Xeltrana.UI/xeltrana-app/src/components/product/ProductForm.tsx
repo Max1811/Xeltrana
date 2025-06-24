@@ -83,7 +83,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ productId }) => {
         setCategories(categoriesResult.data as []);
 
         const productColors = await api.get<Color[]>("/products/colors");
-        console.log(productColors.data);
         setAvailableColors(productColors.data);
 
         const productSizesData = await api.get<ProductSize[]>(

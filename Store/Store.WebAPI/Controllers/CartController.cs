@@ -56,5 +56,11 @@ namespace Store.WebAPI.Controllers
         {
             await _cartService.UpdateQuantity(productVariantId, updateQuantityModel.Quantity);
         }
+
+        [HttpPut("cartItem/{cartItemId}/productVariant")]
+        public async Task UpdateCartItemProductVariant(int cartItemId, [FromBody] UpdateCartItemProductVariant updateCartItemProductVariant)
+        {
+            await _cartService.UpdateProductVariant(cartItemId, updateCartItemProductVariant.ProductVariantId);
+        }
     }
 }

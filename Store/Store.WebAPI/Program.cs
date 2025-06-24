@@ -56,6 +56,8 @@ builder.Services.AddScoped<ImageUrlResolver>();
 builder.Services.AddScoped<IS3Service, S3Service>();
 builder.Services.AddScoped<IFavouritesService, FavouritesService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<ILiqPayService, LiqPayService>();
 
 builder.Services.AddCors(options =>
 {

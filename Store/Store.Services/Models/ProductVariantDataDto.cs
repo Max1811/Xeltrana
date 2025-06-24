@@ -2,6 +2,7 @@
 {
     public class ProductVariantDataDto
     {
+        public int Id { get; set; }
         public string Color { get; set; }
         public int ColorId { get; set; }
         public string HexCode { get; set; }

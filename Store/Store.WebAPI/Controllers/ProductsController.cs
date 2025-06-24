@@ -78,5 +78,13 @@ namespace Store.WebAPI.Controllers
 
             return _mapper.Map<IEnumerable<ProductSizeDto>>(productSizes);
         }
+
+        [HttpGet("product-variant/{productId}")]
+        public async Task<IEnumerable<ProductVariantDataDto>> GetProductVariants(int productId)
+        {
+            var variants = await _productService.GetProductVariantsAsync(productId);
+
+            return _mapper.Map<IEnumerable<ProductVariantDataDto>>(variants);
+        }
     }
 }

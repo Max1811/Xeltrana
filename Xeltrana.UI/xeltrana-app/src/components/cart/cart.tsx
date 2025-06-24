@@ -3,11 +3,13 @@ import { useStoreContext } from "../../context/storeContext";
 import api from "../../services/api";
 import CartLine from "./cartLine";
 import { useNavigate } from "react-router-dom";
+import ErrorBanner from "../react-custom-components/banners/errorBanner";
 
 const Cart: React.FC = () => {
   const { cart } = useStoreContext();
   const navigate = useNavigate();
   const [localCartItems, setLocalCartItems] = useState(cart.items);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     setLocalCartItems(cart.items);
@@ -47,40 +49,48 @@ const Cart: React.FC = () => {
 
   const handleCreateOrder = () => {
     if (cart.items.some((c) => !c?.productVariant?.id)) {
-      console.log("missing id");
+      setErrorMessage("Please specify all products information");
     } else {
       navigate("/order");
     }
   };
 
   return (
-    <div className="cart-page">
-      <h2>Cart Items</h2>
-      {localCartItems.length === 0 ? (
-        <p>No cart items yet.</p>
-      ) : (
-        localCartItems.map((item: any) => (
-          <CartLine
-            key={item.productVariant?.id}
-            product={item.product}
-            productVariant={item?.productVariant}
-            quantity={item?.quantity}
-            maxAvailableQuantity={item?.productVariant?.stockQuantity}
-            onRemove={handleRemove}
-            onQuantityChange={updateQuantityInBackend}
-          />
-        ))
-      )}
-      <div className="cart-total-container">
-        <h3>Total:</h3>
-        <p>{updateTotalCount().toFixed(2)}$</p>
+    <>
+      <ErrorBanner
+        message={errorMessage}
+        visible={!!errorMessage}
+        onClose={() => setErrorMessage("")}
+      />
+      <div className="cart-page">
+        <h2>Cart Items</h2>
+        {localCartItems.length === 0 ? (
+          <p>No cart items yet.</p>
+        ) : (
+          localCartItems.map((item: any) => (
+            <CartLine
+              key={item.productVariant?.id}
+              cartItemId={item.id}
+              product={item.product}
+              productVariant={item?.productVariant}
+              quantity={item?.quantity}
+              maxAvailableQuantity={item?.productVariant?.stockQuantity}
+              onRemove={handleRemove}
+              onQuantityChange={updateQuantityInBackend}
+            />
+          ))
+        )}
+        <div className="cart-total-container">
+          <h3>Total:</h3>
+          <p>{updateTotalCount().toFixed(2)}$</p>
+        </div>
+        <div className="cart-order-now-container">
+          <button className="order-now" onClick={handleCreateOrder}>
+            Order Now
+          </button>
+        </div>
       </div>
-      <div className="cart-order-now-container">
-        <button className="order-now" onClick={handleCreateOrder}>
-          Order Now
-        </button>
-      </div>
-    </div>
+    </>
   );
 };
 

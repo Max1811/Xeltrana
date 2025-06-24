@@ -21,6 +21,7 @@ namespace Store.Business.Services
         Task<IEnumerable<ProductSize>> GetProductSizes();
         Task<Product?> UpdateProductAsync(UpdateProductDto product);
         Task<List<string>> HandleUpdateProductImages(List<string> images, string tempRef, int productId);
+        Task<IEnumerable<ProductVariant>> GetProductVariantsAsync(int productId);
     }
 
     public class ProductService : IProductService
@@ -201,6 +202,15 @@ namespace Store.Business.Services
             }
 
             return existingImages;
+        }
+
+        public async Task<IEnumerable<ProductVariant>> GetProductVariantsAsync(int productId)
+        {
+            return await _appDbContext.ProductVariants
+                .Where(v => v.ProductId == productId)
+                .Include(v => v.Color)
+                .Include(v => v.Size)
+                .ToListAsync();
         }
 
         private async Task<List<Product>> GetProducts(Expression<Func<Product, bool>> predicate)

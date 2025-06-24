@@ -13,6 +13,7 @@ namespace Store.Business.Services
         Task<CartItem?> RemoveFromCart(int productId, int userId, int? productVariantId);
         Task SwitchCartItem(CartItem cartItem);
         Task UpdateQuantity(int productVariantId, int quantity);
+        Task UpdateProductVariant(int cartItemId, int productVariantId);
     }
     public class CartService : ICartService
     {
@@ -94,6 +95,17 @@ namespace Store.Business.Services
             }
 
             await _appDbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateProductVariant(int cartItemId, int productVariantId)
+        {
+            var existingCartItem = await _appDbContext.CartItems.FirstOrDefaultAsync(c => c.Id == cartItemId);
+
+            if (existingCartItem != null)
+            {
+                existingCartItem.ProductVariantId = productVariantId;
+                await _appDbContext.SaveChangesAsync();
+            }
         }
 
         public async Task UpdateQuantity(int productVariantId, int quantity)

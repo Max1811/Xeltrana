@@ -1,0 +1,26 @@
+.error-banner {
+  position: fixed;
+  top: 1rem; /* Padding from the top */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fc7e8b; /* Softer red */
+  color: #61161e;
+  padding: 12px 20px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-weight: 600;
+  z-index: 1000;
+  min-width: 500px;
+  max-width: 800px;
+  width: auto;
+  text-align: center;
+
+  opacity: 0;
+  transform: translate(-50%, -20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.error-banner.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
